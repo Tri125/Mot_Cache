@@ -63,19 +63,25 @@ bool ValidationLigne(string ligne, int nbr)
 		}
 	}
 
-	if (ligne.length < 35)
+	if (ligne.length() < 35)
 	{
 		cout << "Erreur ligne " << nbr << " la citation contient moins que 35 caractères.\n";
 		return false;
 	}
 
-	if (ligne.length > 100)
+	if (ligne.length() > 100)
 	{
 		cout << "Erreur ligne " << nbr << " la citation contient plus que 100 caractères.\n";
 		return false;
 	}
 
-	int pos = ligne.find("\n");
+	int pos = ligne.find("  ");
+
+	if (pos != string::npos)
+	{
+		cout << "Erreur ligne " << nbr << " séparateur de mot consécutifs dans la citation.\n";
+		return false;
+	}
 
 
 	return true;
