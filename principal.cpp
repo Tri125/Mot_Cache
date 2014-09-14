@@ -1,6 +1,9 @@
 #include "maBiblio.h"
 
 bool ValidationLigne(string, int);
+int OptimiseLongueur(string);
+void GrilleLettre(string);
+void GrilleJeu(string);
 
 int main()
 {
@@ -39,11 +42,11 @@ int main()
 
 		ligneCourante = ligneCourante.substr(pos);
 
-		if (ValidationLigne(ligneCourante, nbLigne))
-		{
-			cout << endl;
-		}
+		if (!ValidationLigne(ligneCourante, nbLigne))
+			continue;
+		OptimiseLongueur(ligneCourante);
 	}
+
 
 	ficIn.close();
 	system("pause");
@@ -85,4 +88,30 @@ bool ValidationLigne(string ligne, int nbr)
 
 
 	return true;
+}
+
+int OptimiseLongueur(string ligne)
+{
+	int colonnes = 0;
+	int meilleurTronquage = 9999;
+
+	for (int i = 13; i < 18; i++)
+	{
+		int motTronquer = 0;
+		int times = ceil((double)ligne.length() /i);
+		for (int t = 1; t <= times; t++)
+		{
+			if ((ligne.length() > ((t * i))) && (ligne[t*i] != ' ') && (ligne[(t*i) -1] != ' '))
+			{
+				motTronquer++;
+			}
+		}
+		if (motTronquer < meilleurTronquage)
+		{
+			meilleurTronquage = motTronquer;
+			colonnes = i;
+		}
+	}
+
+	return colonnes;
 }
