@@ -132,13 +132,30 @@ vector<string> GrilleLettre(string ligne, int colonne)
 		grilleLettre.push_back(ligne.substr(0, colonne));
 		ligne = ligne.substr(ligne.length() <= colonne ? ligne.length() : colonne);
 	}
+	if (grilleLettre[grilleLettre.size() - 1].length() < colonne)
+	{
+		int i = colonne - grilleLettre[grilleLettre.size() - 1].length();
+		string s(i, ' ');
+		grilleLettre[grilleLettre.size() - 1] += s;
+	}
+
+	cout << "";
 
 	for (int i = 0; i < colonne; i++)
 	{
 		int nbrEchange = rand() % 50 + 1;
 		for (int r = 0; r < nbrEchange; r++)
 		{
-			swap(grilleLettre[rand() % grilleLettre.size()][i],grilleLettre[rand() % grilleLettre.size()][i]);
+			int premier = rand() % grilleLettre.size();;
+			int deuxieme = rand() % grilleLettre.size();;
+	
+
+			//do
+			//{
+			//	premier = rand() % grilleLettre.size();
+			//	deuxieme = rand() % grilleLettre.size();
+			//} while ((premier == grilleLettre.size()-1 && i > grilleLettre[premier].length()) || (deuxieme == grilleLettre.size()-1 && i > grilleLettre[deuxieme].length()));
+			swap(grilleLettre[premier][i],grilleLettre[deuxieme][i]);
 		}
 	}
 	cout << endl;
