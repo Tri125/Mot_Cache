@@ -2,5 +2,6 @@
 #include <cmath>
 #include <string>
 #include <fstream>
-#include <list>
+#include <vector>
+#include <ctime>
 using namespace std;

@@ -2,11 +2,12 @@
 
 bool ValidationLigne(string, int);
 int OptimiseLongueur(string);
-list<string> GrilleLettre(string, int);
-list<string> GrilleJeu(string, int);
+vector<string> GrilleLettre(string, int);
+vector<string> GrilleJeu(string, int);
 
 int main()
 {
+	srand(time(NULL));
 	setlocale(LC_ALL, "");
 	ifstream ficIn;
 	ofstream ficOut;
@@ -46,7 +47,9 @@ int main()
 		if (!ValidationLigne(ligneCourante, nbLigne))
 			continue;
 		nbrColonnes = OptimiseLongueur(ligneCourante);
+		GrilleLettre(ligneCourante, nbrColonnes);
 		GrilleJeu(ligneCourante, nbrColonnes);
+		system("pause");
 	}
 
 
@@ -119,16 +122,38 @@ int OptimiseLongueur(string ligne)
 }
 
 
-list<string> GrilleLettre(string ligne, int colonne)
+vector<string> GrilleLettre(string ligne, int colonne)
 {
-	list<string> l;
-	return  l;
+	vector<string> grilleLettre;
+
+
+	while (ligne.length() != 0)
+	{
+		grilleLettre.push_back(ligne.substr(0, colonne));
+		ligne = ligne.substr(ligne.length() <= colonne ? ligne.length() : colonne);
+	}
+
+	for (int i = 0; i < colonne; i++)
+	{
+		int nbrEchange = rand() % 50 + 1;
+		for (int r = 0; r < nbrEchange; r++)
+		{
+			swap(grilleLettre[rand() % grilleLettre.size()][i],grilleLettre[rand() % grilleLettre.size()][i]);
+		}
+	}
+	cout << endl;
+	for (string s : grilleLettre)
+	{
+		cout << s;
+		cout << endl;
+	}
+	return  grilleLettre;
 }
 
 
-list<string> GrilleJeu(string ligne, int colonne)
+vector<string> GrilleJeu(string ligne, int colonne)
 {
-	list<string> grilleJeu;
+	vector<string> grilleJeu;
 
 	for (int i = 0; i < ligne.length();i++)
 	{
@@ -146,5 +171,12 @@ list<string> GrilleJeu(string ligne, int colonne)
 		ligne = ligne.substr(ligne.length() <= colonne ? ligne.length() : colonne);
 	}
 
+
+	cout << endl;
+	for (string s : grilleJeu)
+	{
+		cout << s;
+		cout << endl;
+	}
 	return grilleJeu;
 }
