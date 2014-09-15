@@ -2,8 +2,8 @@
 
 bool ValidationLigne(string, int);
 int OptimiseLongueur(string);
-void GrilleLettre(string);
-void GrilleJeu(string);
+list<string> GrilleLettre(string, int);
+list<string> GrilleJeu(string, int);
 
 int main()
 {
@@ -13,6 +13,7 @@ int main()
 	string nomFichier;
 	string ligneCourante;
 	int nbLigne = 0;
+	int nbrColonnes = 0;
 
 	do
 	{
@@ -44,7 +45,8 @@ int main()
 
 		if (!ValidationLigne(ligneCourante, nbLigne))
 			continue;
-		OptimiseLongueur(ligneCourante);
+		nbrColonnes = OptimiseLongueur(ligneCourante);
+		GrilleJeu(ligneCourante, nbrColonnes);
 	}
 
 
@@ -114,4 +116,35 @@ int OptimiseLongueur(string ligne)
 	}
 
 	return colonnes;
+}
+
+
+list<string> GrilleLettre(string ligne, int colonne)
+{
+	list<string> l;
+	return  l;
+}
+
+
+list<string> GrilleJeu(string ligne, int colonne)
+{
+	list<string> grilleJeu;
+
+	for (int i = 0; i < ligne.length();i++)
+	{
+		if (isalnum(ligne[i]))
+		{
+			ligne[i] = '-';
+		}
+		else
+			ligne[i] = ' ';
+	}
+
+	while (ligne.length() != 0)
+	{
+		grilleJeu.push_back(ligne.substr(0, colonne));
+		ligne = ligne.substr(ligne.length() <= colonne ? ligne.length() : colonne);
+	}
+
+	return grilleJeu;
 }
