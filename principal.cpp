@@ -18,6 +18,8 @@ int main()
 	string ligneCourante;
 	int nbLigne = 0;
 	int nbrColonnes = 0;
+   int nbGenerer = 0;
+   stringstream ss;
 
 	do
 	{
@@ -51,11 +53,34 @@ int main()
 			continue;
 		nbrColonnes = OptimiseLongueur(ligneCourante);
 		vector<string> teste = GrilleLettre(ligneCourante, nbrColonnes);
-		//GrilleJeu(ligneCourante, nbrColonnes);
+		vector<string> teste2= GrilleJeu(ligneCourante, nbrColonnes);
 
 		PromotionEspaceVide(teste);
 		system("pause");
+      nbGenerer++;
+      ss << "Citation" << nbGenerer << ".txt";
+      ficOut.open(ss.str(), ios::out);
+      ss.str(string());
+
+      ficOut << endl;
+      ficOut << endl;
+      for (string s : teste)
+      {
+         ficOut << s;
+         ficOut << endl;
+      }
+         ficOut << endl;
+         ficOut << endl;
+         ficOut << endl;
+      for (string s : teste2)
+      {
+         ficOut << endl;
+         ficOut << s;
+         ficOut << endl;
+      }
+      ficOut.close();
 	}
+
 
 
 	ficIn.close();
