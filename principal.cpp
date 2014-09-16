@@ -4,6 +4,9 @@ bool ValidationLigne(string, int);
 int OptimiseLongueur(string);
 vector<string> GrilleLettre(string, int);
 vector<string> GrilleJeu(string, int);
+void PromotionEspaceVide(vector<string>&);
+void EspaceSort(vector<string>&, int, int,int);
+int Partition(vector<string>&,int,int,int,int);
 
 int main()
 {
@@ -47,8 +50,10 @@ int main()
 		if (!ValidationLigne(ligneCourante, nbLigne))
 			continue;
 		nbrColonnes = OptimiseLongueur(ligneCourante);
-		GrilleLettre(ligneCourante, nbrColonnes);
-		GrilleJeu(ligneCourante, nbrColonnes);
+		vector<string> teste = GrilleLettre(ligneCourante, nbrColonnes);
+		//GrilleJeu(ligneCourante, nbrColonnes);
+
+		PromotionEspaceVide(teste);
 		system("pause");
 	}
 
@@ -196,4 +201,65 @@ vector<string> GrilleJeu(string ligne, int colonne)
 		cout << endl;
 	}
 	return grilleJeu;
+}
+
+
+void PromotionEspaceVide(vector<string>& grille)
+{
+	cout << endl;
+	cout << endl;
+	cout << "avant";
+	cout << endl;
+	for (string s : grille)
+	{
+		cout << s;
+		cout << endl;
+	}
+	for (int i = 0; i < grille[0].length(); i++)
+	{
+		EspaceSort(grille, 0, grille.size() - 1, i);
+	}
+
+	cout << endl;
+	cout << endl;
+	cout << "apres";
+	cout << endl;
+	for (string s : grille)
+	{
+		cout << s;
+		cout << endl;
+	}
+	
+}
+
+
+void EspaceSort(vector<string>& vecteur, int debut, int fin, int ligne)
+{
+	if (fin <= debut)
+		return;
+	
+		int indexPivot = rand() % (fin - debut) + debut;
+		indexPivot = Partition(vecteur, debut, fin, indexPivot, ligne);
+		EspaceSort(vecteur, debut, indexPivot - 1, ligne);
+		EspaceSort(vecteur, indexPivot + 1, fin, ligne);
+	
+}
+
+
+int Partition(vector<string>& vecteur, int debut, int fin, int pivot, int ligne)
+{
+	char cpivot = vecteur[pivot][ligne];
+	swap(vecteur[pivot][ligne], vecteur[fin][ligne]);
+
+	int pivpost = debut;
+	for (int i = debut; i < fin;i++)
+	{
+		if (vecteur[i][ligne] == ' ')
+		{
+			swap(vecteur[pivpost][ligne], vecteur[i][ligne]);
+			pivpost += 1;
+		}
+	}
+	swap(vecteur[pivpost][ligne], vecteur[fin][ligne]);
+	return pivpost;
 }
