@@ -1,4 +1,4 @@
-#include "maBiblio.h"
+Ôªø#include "maBiblio.h"
 
 bool ValidationLigne(string, int);
 int OptimiseLongueur(string);
@@ -7,19 +7,21 @@ vector<string> GrilleJeu(string, int);
 void PromotionEspaceVide(vector<string>&);
 void EspaceSort(vector<string>&, int, int,int);
 int Partition(vector<string>&,int,int,int,int);
+void EcrireFichier(vector<string>, vector<string>, int);
 
 int main()
 {
 	srand(time(NULL));
 	setlocale(LC_ALL, "");
 	ifstream ficIn;
-	ofstream ficOut;
 	string nomFichier;
 	string ligneCourante;
 	int nbLigne = 0;
 	int nbrColonnes = 0;
    int nbGenerer = 0;
-   stringstream ss;
+   string cadreHaut = "‚ïî‚ïê";
+   string cadreCote = "‚ïë";
+   string cadreBas = "‚ïö";
 
 	do
 	{
@@ -39,8 +41,8 @@ int main()
 		nbLigne++;
 		getline(ficIn, ligneCourante);
 		int pos = ligneCourante.find_first_not_of("\n ");
-		//find_first_not_of peut retourner string::npos (constante ÈvaluÈ ‡ -1) si rien n'a ÈtÈ trouvÈ.
-		//Si c'est le cas, ligne vide ou mal formatÈ, break ‡ l'extÈrieur du for pour prendre la prochaine ligne.
+		//find_first_not_of peut retourner string::npos (constante √©valu√© √† -1) si rien n'a √©t√© trouv√©.
+		//Si c'est le cas, ligne vide ou mal format√©, break √† l'ext√©rieur du for pour prendre la prochaine ligne.
 		if (pos == string::npos)
 		{
 			cout << "Erreur ligne " << nbLigne << " citation vide.\n";
@@ -58,27 +60,8 @@ int main()
 		PromotionEspaceVide(teste);
 		system("pause");
       nbGenerer++;
-      ss << "Citation" << nbGenerer << ".txt";
-      ficOut.open(ss.str(), ios::out);
-      ss.str(string());
-
-      ficOut << endl;
-      ficOut << endl;
-      for (string s : teste)
-      {
-         ficOut << s;
-         ficOut << endl;
-      }
-         ficOut << endl;
-         ficOut << endl;
-         ficOut << endl;
-      for (string s : teste2)
-      {
-         ficOut << endl;
-         ficOut << s;
-         ficOut << endl;
-      }
-      ficOut.close();
+      EcrireFichier(teste, teste2, nbGenerer);
+      
 	}
 
 
@@ -89,6 +72,38 @@ int main()
 }
 
 
+
+
+void EcrireFichier(vector<string> sup, vector<string> inf, int nb)
+{
+   ofstream ficOut;
+   stringstream ss;
+
+   ss << "Citation" << nb << ".txt";
+
+   ficOut.open(ss.str(), ios::out);
+   ss.str(string());
+
+   ficOut << endl;
+   ficOut << endl;
+   for (string s : sup)
+   {
+      ficOut << s;
+      ficOut << endl;
+   }
+   ficOut << endl;
+   ficOut << endl;
+   ficOut << endl;
+   for (string s : inf)
+   {
+      ficOut << endl;
+      ficOut << s;
+      ficOut << endl;
+   }
+   ficOut.close();
+}
+
+
 bool ValidationLigne(string ligne, int nbr)
 {
 	for (char c : ligne)
@@ -96,20 +111,20 @@ bool ValidationLigne(string ligne, int nbr)
 		int i = c;
 		if (i >= 128 || i < 0)
 		{
-			cout << "Erreur ligne " << nbr << " la citation contient des caractËres illegaux.\n";
+			cout << "Erreur ligne " << nbr << " la citation contient des caract√®res illegaux.\n";
 			return false;
 		}
 	}
 
 	if (ligne.length() < 35)
 	{
-		cout << "Erreur ligne " << nbr << " la citation contient moins que 35 caractËres.\n";
+		cout << "Erreur ligne " << nbr << " la citation contient moins que 35 caract√®res.\n";
 		return false;
 	}
 
 	if (ligne.length() > 100)
 	{
-		cout << "Erreur ligne " << nbr << " la citation contient plus que 100 caractËres.\n";
+		cout << "Erreur ligne " << nbr << " la citation contient plus que 100 caract√®res.\n";
 		return false;
 	}
 
@@ -117,7 +132,7 @@ bool ValidationLigne(string ligne, int nbr)
 
 	if (pos != string::npos)
 	{
-		cout << "Erreur ligne " << nbr << " sÈparateur de mot consÈcutifs dans la citation.\n";
+		cout << "Erreur ligne " << nbr << " s√©parateur de mot cons√©cutifs dans la citation.\n";
 		return false;
 	}
 
@@ -179,20 +194,13 @@ vector<string> GrilleLettre(string ligne, int colonne)
 			int premier = rand() % grilleLettre.size();;
 			int deuxieme = rand() % grilleLettre.size();;
 	
-
-			//do
-			//{
-			//	premier = rand() % grilleLettre.size();
-			//	deuxieme = rand() % grilleLettre.size();
-			//} while ((premier == grilleLettre.size()-1 && i > grilleLettre[premier].length()) || (deuxieme == grilleLettre.size()-1 && i > grilleLettre[deuxieme].length()));
 			swap(grilleLettre[premier][i],grilleLettre[deuxieme][i]);
 		}
 	}
 	cout << endl;
-	for (string s : grilleLettre)
+	for (int i = 0; i < grilleLettre.size(); i++)
 	{
-		cout << s;
-		cout << endl;
+      transform(grilleLettre[i].begin(), grilleLettre[i].end(), grilleLettre[i].begin(), toupper);
 	}
 	return  grilleLettre;
 }
