@@ -8,6 +8,7 @@ void PromotionEspaceVide(vector<string>&);
 void EspaceSort(vector<string>&, int, int,int);
 int Partition(vector<string>&,int,int,int,int);
 void EcrireFichier(vector<string>, vector<string>, int);
+bool is_npos(int);
 
 int main()
 {
@@ -58,7 +59,7 @@ int main()
 		vector<string> teste2= GrilleJeu(ligneCourante, nbrColonnes);
 
 		PromotionEspaceVide(teste);
-		system("pause");
+		//system("pause");
       nbGenerer++;
       EcrireFichier(teste, teste2, nbGenerer);
       
@@ -128,16 +129,29 @@ bool ValidationLigne(string ligne, int nbr)
 		return false;
 	}
 
-	int pos = ligne.find("  ");
+	bool bon = is_npos(ligne.find("  ")) &
+              is_npos(ligne.find("--")) &
+              is_npos(ligne.find("''")) &
+              is_npos(ligne.find("..")) &
+              is_npos(ligne.find(",,"));
 
-	if (pos != string::npos)
+	if (!bon)
 	{
+
 		cout << "Erreur ligne " << nbr << " séparateur de mot consécutifs dans la citation.\n";
 		return false;
 	}
 
 
 	return true;
+}
+
+
+bool is_npos(int i)
+{
+   if (i == string::npos)
+      return true;
+   return false;
 }
 
 int OptimiseLongueur(string ligne)
@@ -184,7 +198,6 @@ vector<string> GrilleLettre(string ligne, int colonne)
 		grilleLettre[grilleLettre.size() - 1] += s;
 	}
 
-	cout << "";
 
 	for (int i = 0; i < colonne; i++)
 	{
@@ -197,7 +210,6 @@ vector<string> GrilleLettre(string ligne, int colonne)
 			swap(grilleLettre[premier][i],grilleLettre[deuxieme][i]);
 		}
 	}
-	cout << endl;
 	for (int i = 0; i < grilleLettre.size(); i++)
 	{
       transform(grilleLettre[i].begin(), grilleLettre[i].end(), grilleLettre[i].begin(), toupper);
@@ -227,12 +239,6 @@ vector<string> GrilleJeu(string ligne, int colonne)
 	}
 
 
-	cout << endl;
-	for (string s : grilleJeu)
-	{
-		cout << s;
-		cout << endl;
-	}
 	return grilleJeu;
 }
 
