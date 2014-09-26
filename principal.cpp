@@ -8,6 +8,7 @@ void PromotionEspaceVide(vector<string>&);
 void EspaceSort(vector<string>&, int, int,int);
 int Partition(vector<string>&,int,int,int,int);
 void EcrireFichier(vector<string>, vector<string>, int);
+void AfficherJeu(vector<string>, vector<string>);
 bool is_npos(int);
 
 int main()
@@ -34,13 +35,14 @@ int main()
 		//Un peu comme Assert, si le fichie n'ouvre pas il affiche un message d'erreur.
 	} while (!ficIn.is_open() && (cout << "Erreur de lecture.\n"));
 
-	cout << "Fichier :" << nomFichier << " est en mode lecture.";
+	cout << "Fichier :" << nomFichier << " est en mode lecture.\n";
 
 
 	while (ficIn.good())
 	{
 		nbLigne++;
 		getline(ficIn, ligneCourante);
+		/*
 		int pos = ligneCourante.find_first_not_of("\n ");
 		//find_first_not_of peut retourner string::npos (constante évalué à -1) si rien n'a été trouvé.
 		//Si c'est le cas, ligne vide ou mal formaté, break à l'extérieur du for pour prendre la prochaine ligne.
@@ -51,25 +53,48 @@ int main()
 		}
 
 		ligneCourante = ligneCourante.substr(pos);
+		*/
 
 		if (!ValidationLigne(ligneCourante, nbLigne))
 			continue;
 		nbrColonnes = OptimiseLongueur(ligneCourante);
-		vector<string> teste = GrilleLettre(ligneCourante, nbrColonnes);
-		vector<string> teste2= GrilleJeu(ligneCourante, nbrColonnes);
+		vector<string> grilleLettre = GrilleLettre(ligneCourante, nbrColonnes);
+		vector<string> grilleJeu= GrilleJeu(ligneCourante, nbrColonnes);
 
-		PromotionEspaceVide(teste);
-		//system("pause");
+		PromotionEspaceVide(grilleLettre);
       nbGenerer++;
-      EcrireFichier(teste, teste2, nbGenerer);
+	  AfficherJeu(grilleLettre, grilleJeu);
+      EcrireFichier(grilleLettre, grilleJeu, nbGenerer);
+	  system("pause");
       
 	}
 
 
 
 	ficIn.close();
+	cout << "Programme terminé\n";
 	system("pause");
 	return 0;
+}
+
+
+void AfficherJeu(vector<string> haut, vector<string> bas)
+{
+	cout << endl << endl;
+
+	for (string s : haut)
+	{
+		cout << s << endl;
+	}
+
+	cout << endl;
+
+	for (string s : bas)
+	{
+		cout << s << endl;
+	}
+
+	cout << endl << endl;
 }
 
 
@@ -83,7 +108,6 @@ void EcrireFichier(vector<string> sup, vector<string> inf, int nb)
    ss << "Citation" << nb << ".txt";
 
    ficOut.open(ss.str(), ios::out);
-   ss.str(string());
 
    ficOut << endl;
    ficOut << endl;
@@ -92,9 +116,6 @@ void EcrireFichier(vector<string> sup, vector<string> inf, int nb)
       ficOut << s;
       ficOut << endl;
    }
-   ficOut << endl;
-   ficOut << endl;
-   ficOut << endl;
    for (string s : inf)
    {
       ficOut << endl;
@@ -102,6 +123,9 @@ void EcrireFichier(vector<string> sup, vector<string> inf, int nb)
       ficOut << endl;
    }
    ficOut.close();
+
+   cout << "Grille enregistrée à : " << ss.str() << endl;;
+   ss.str(string());
 }
 
 
@@ -245,28 +269,9 @@ vector<string> GrilleJeu(string ligne, int colonne)
 
 void PromotionEspaceVide(vector<string>& grille)
 {
-	cout << endl;
-	cout << endl;
-	cout << "avant";
-	cout << endl;
-	for (string s : grille)
-	{
-		cout << s;
-		cout << endl;
-	}
 	for (int i = 0; i < grille[0].length(); i++)
 	{
 		EspaceSort(grille, 0, grille.size() - 1, i);
-	}
-
-	cout << endl;
-	cout << endl;
-	cout << "apres";
-	cout << endl;
-	for (string s : grille)
-	{
-		cout << s;
-		cout << endl;
 	}
 	
 }
