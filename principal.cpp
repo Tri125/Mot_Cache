@@ -1,9 +1,10 @@
 ﻿#include "maBiblio.h"
+#define size_type string::size_type
 
 bool ValidationLigne(string, int);
 int OptimiseLongueur(string);
-vector<string> GrilleLettre(string, int);
-vector<string> GrilleJeu(string, int);
+vector<string> GrilleLettre(string, size_type);
+vector<string> GrilleJeu(string, size_type);
 void PromotionEspaceVide(vector<string>&);
 void EspaceSort(vector<string>&, int, int, int);
 int Partition(vector<string>&, int, int, int, int);
@@ -156,8 +157,8 @@ Retourne false si incorrect. True pour valide.
 */
 bool ValidationLigne(string ligne, int nbr)
 {
-	const string::size_type LONGUEUR_MINIMAL = 35;
-	const string::size_type LONGUEUR_MAXIMAL = 100;
+	const size_type LONGUEUR_MINIMAL = 35;
+	const size_type LONGUEUR_MAXIMAL = 100;
  	for (char c : ligne)
 	{
 		//Prend le code ascii du char
@@ -229,7 +230,7 @@ int OptimiseLongueur(string ligne)
 	int meilleurTronquage = 9999;
 
 	//Vérifie selon la longueur minimale de 13 caractères par ligne jusqu'au maximum de 17 inclusivement.
-	for (int i = MIN_CHAR_LIGNE; i <= MAX_CHAR_LIGNE; i++)
+	for (size_type i = MIN_CHAR_LIGNE; i <= MAX_CHAR_LIGNE; i++)
 	{
 		//Compteur de mots tronqués.
 		int motTronquer = 0;
@@ -262,7 +263,7 @@ int OptimiseLongueur(string ligne)
 Créer la grille de lettre à partir d'un string et du nombre de colonnes.
 Retourne le résultat sour la forme d'un vector<string> ou chaque string est une ligne différente.
 */
-vector<string> GrilleLettre(string ligne, int colonne)
+vector<string> GrilleLettre(string ligne, size_type colonne)
 {
 	vector<string> grilleLettre;
 
@@ -284,7 +285,7 @@ vector<string> GrilleLettre(string ligne, int colonne)
 	}
 
 	//Mélange les caractères des colonnes
-	for (int i = 0; i < colonne; i++)
+	for (size_type i = 0; i < colonne; i++)
 	{
 		int nbrEchange = rand() % 50 + 1;
 		for (int r = 0; r < nbrEchange; r++)
@@ -296,7 +297,7 @@ vector<string> GrilleLettre(string ligne, int colonne)
 		}
 	}
 	//Utilisation des itérateurs pour transformer chaque char en majuscule.
-	for (int i = 0; i < grilleLettre.size(); i++)
+	for (size_type i = 0; i < grilleLettre.size(); i++)
 	{
 		transform(grilleLettre[i].begin(), grilleLettre[i].end(), grilleLettre[i].begin(), toupper);
 	}
@@ -307,11 +308,11 @@ vector<string> GrilleLettre(string ligne, int colonne)
 Créer la grille de jeu avec des emplacements vides ou des emplacements pour écrire des lettres du nombre de colonnes données.
 Retourne un vector<string> qui est la grille formaté où chaque string est une ligne.
 */
-vector<string> GrilleJeu(string ligne, int colonne)
+vector<string> GrilleJeu(string ligne, size_type colonne)
 {
 	vector<string> grilleJeu;
 
-	for (int i = 0; i < ligne.length(); i++)
+	for (size_type i = 0; i < ligne.length(); i++)
 	{
 		//Si le caractère est alpha-numérique, on le remplace par un emplacement lettre.
 		if (isalnum(ligne[i]))
@@ -346,7 +347,7 @@ Puisque QuickSort est un algorithme instable, l'ordre des lettres n'est pas gara
 void PromotionEspaceVide(vector<string>& grille)
 {
 	//Pour chaque colonnes
-	for (int i = 0; i < grille[0].length(); i++)
+	for (size_type i = 0; i < grille[0].length(); i++)
 	{
 		//Lance EspaceSort, envois le data, l'index du début, l'index de la fin et le numéro de la colonne traité.
 		EspaceSort(grille, 0, grille.size() - 1, i);
