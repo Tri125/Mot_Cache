@@ -5,8 +5,8 @@ int OptimiseLongueur(string);
 vector<string> GrilleLettre(string, int);
 vector<string> GrilleJeu(string, int);
 void PromotionEspaceVide(vector<string>&);
-void EspaceSort(vector<string>&, int, int,int);
-int Partition(vector<string>&,int,int,int,int);
+void EspaceSort(vector<string>&, int, int, int);
+int Partition(vector<string>&, int, int, int, int);
 void EcrireFichier(vector<string>, vector<string>, int);
 void AfficherJeu(vector<string>, vector<string>);
 bool is_npos(int);
@@ -20,10 +20,10 @@ int main()
 	string ligneCourante;
 	int nbLigne = 0;
 	int nbrColonnes = 0;
-   int nbGenerer = 0;
-   string cadreHaut = "╔═";
-   string cadreCote = "║";
-   string cadreBas = "╚";
+	int nbGenerer = 0;
+	//string cadreHaut = "╔═";
+	//string cadreCote = "║";
+	//string cadreBas = "╚";
 
 	do
 	{
@@ -48,33 +48,33 @@ int main()
 		//Si c'est le cas, ligne vide ou mal formaté, break à l'extérieur du for pour prendre la prochaine ligne.
 		if (pos == string::npos)
 		{
-			cout << "Erreur ligne " << nbLigne << " citation vide.\n";
-			continue;
+		cout << "Erreur ligne " << nbLigne << " citation vide.\n";
+		continue;
 		}
 
 		ligneCourante = ligneCourante.substr(pos);
 		*/
 
-      //Si la ligne n'est pas valide, continue à la prochaine boucle.
-      //À pour effet d'aller chercher la prochaine ligne.
+		//Si la ligne n'est pas valide, continue à la prochaine boucle.
+		//À pour effet d'aller chercher la prochaine ligne.
 		if (!ValidationLigne(ligneCourante, nbLigne))
 			continue;
 
-      //Le nombre de colonnes qui sera utilisé pour la grille de jeu de cette citation.
+		//Le nombre de colonnes qui sera utilisé pour la grille de jeu de cette citation.
 		nbrColonnes = OptimiseLongueur(ligneCourante);
-      //Chaque string du vector est une ligne différente de la grille.
-      //grilleLettre a les lettres de la grille supérieur.
-      //grilleJeu a la représentation du jeu, l'emplacement où les lettres doivent aller.
+		//Chaque string du vector est une ligne différente de la grille.
+		//grilleLettre a les lettres de la grille supérieur.
+		//grilleJeu a la représentation du jeu, l'emplacement où les lettres doivent aller.
 		vector<string> grilleLettre = GrilleLettre(ligneCourante, nbrColonnes);
-		vector<string> grilleJeu= GrilleJeu(ligneCourante, nbrColonnes);
+		vector<string> grilleJeu = GrilleJeu(ligneCourante, nbrColonnes);
 
 		PromotionEspaceVide(grilleLettre);
-      //Nombre de grille généré par le programme.
-      nbGenerer++;
-	   AfficherJeu(grilleLettre, grilleJeu);
-      EcrireFichier(grilleLettre, grilleJeu, nbGenerer);
-	   system("pause");
-      
+		//Nombre de grille généré par le programme.
+		nbGenerer++;
+		AfficherJeu(grilleLettre, grilleJeu);
+		EcrireFichier(grilleLettre, grilleJeu, nbGenerer);
+		system("pause");
+
 	}
 
 
@@ -83,9 +83,9 @@ int main()
 	cout << "Programme terminé\n";
 	system("pause");
 
-   //Si aucune citation a été généré, retourne le code 1.
-   if (nbGenerer == 0)
-      return 1;
+	//Si aucune citation a été généré, retourne le code 1.
+	if (nbGenerer == 0)
+		return 1;
 	return 0;
 }
 
@@ -120,31 +120,32 @@ Pour enregistrer les grilles du jeu dans un fichier. Le nom du fichier est en fo
 */
 void EcrireFichier(vector<string> sup, vector<string> inf, int nb)
 {
-   ofstream ficOut;
-   stringstream ss;
-   //Utilisation de stringstream pour construire un objet string avec un string litteral et une variable int.
-   ss << "Citation" << nb << ".txt";
+	const string FORMAT = ".txt";
+	ofstream ficOut;
+	stringstream ss;
+	//Utilisation de stringstream pour construire un objet string avec un string litteral et une variable int.
+	ss << "Citation" << nb << FORMAT;
 
-   ficOut.open(ss.str(), ios::out);
-   //Enregistre ligne par ligne le contenue des vector dans le fichier.
-   ficOut << endl;
-   ficOut << endl;
-   for (string s : sup)
-   {
-      ficOut << s;
-      ficOut << endl;
-   }
-   for (string s : inf)
-   {
-      ficOut << endl;
-      ficOut << s;
-      ficOut << endl;
-   }
-   ficOut.close();
+	ficOut.open(ss.str(), ios::out);
+	//Enregistre ligne par ligne le contenue des vector dans le fichier.
+	ficOut << endl;
+	ficOut << endl;
+	for (string s : sup)
+	{
+		ficOut << s;
+		ficOut << endl;
+	}
+	for (string s : inf)
+	{
+		ficOut << endl;
+		ficOut << s;
+		ficOut << endl;
+	}
+	ficOut.close();
 
-   cout << "Grille enregistrée à : " << ss.str() << endl;;
-   //Vide le stringstream
-   ss.str(string());
+	cout << "Grille enregistrée à : " << ss.str() << endl;;
+	//Vide le stringstream
+	ss.str(string());
 }
 
 /*
@@ -155,11 +156,13 @@ Retourne false si incorrect. True pour valide.
 */
 bool ValidationLigne(string ligne, int nbr)
 {
-	for (char c : ligne)
+	const string::size_type LONGUEUR_MINIMAL = 35;
+	const string::size_type LONGUEUR_MAXIMAL = 100;
+ 	for (char c : ligne)
 	{
-      //Prend le code ascii du char
+		//Prend le code ascii du char
 		int i = c;
-      //Vérifie si le char est un charactère du ascii de base.
+		//Vérifie si le char est un charactère du ascii de base.
 		if (i >= 128 || i < 0)
 		{
 			cout << "Erreur ligne " << nbr << " la citation contient des caractères illegaux.\n";
@@ -167,31 +170,31 @@ bool ValidationLigne(string ligne, int nbr)
 		}
 	}
 
-	if (ligne.length() < 35)
+	if (ligne.length() < LONGUEUR_MINIMAL)
 	{
 		cout << "Erreur ligne " << nbr << " la citation contient moins que 35 caractères.\n";
 		return false;
 	}
 
-	if (ligne.length() > 100)
+	if (ligne.length() > LONGUEUR_MAXIMAL)
 	{
 		cout << "Erreur ligne " << nbr << " la citation contient plus que 100 caractères.\n";
 		return false;
 	}
 
-   /*
-   Utilise l'opérateur AND bit-à-bit pour déterminer si deux caractères d'espacement ce situe un à côté de l'autre.
-   La réponse est en un bit (bool). Si une des fonctions retourne un False, le résultat final sera un False.
-   Alors que pour que "bon" soit True, il faut que toutes les fonctions retourne True.
-   string.find() retourne la constante npos s'il n'y a aucun résultat dans la string, ce qui est le cas s'il n'y a pas de
-   dédoublement de caractères d'espacement. is_npos retourne True si, en effet, il n'est pas présent.
-   Permet d'avoir une condition if assez petite.
-   */
+	/*
+	Utilise l'opérateur AND bit-à-bit pour déterminer si deux caractères d'espacement ce situe un à côté de l'autre.
+	La réponse est en un bit (bool). Si une des fonctions retourne un False, le résultat final sera un False.
+	Alors que pour que "bon" soit True, il faut que toutes les fonctions retourne True.
+	string.find() retourne la constante npos s'il n'y a aucun résultat dans la string, ce qui est le cas s'il n'y a pas de
+	dédoublement de caractères d'espacement. is_npos retourne True si, en effet, il n'est pas présent.
+	Permet d'avoir une condition if assez petite.
+	*/
 	bool bon = is_npos(ligne.find("  ")) &
-              is_npos(ligne.find("--")) &
-              is_npos(ligne.find("''")) &
-              is_npos(ligne.find("..")) &
-              is_npos(ligne.find(",,"));
+		is_npos(ligne.find("--")) &
+		is_npos(ligne.find("''")) &
+		is_npos(ligne.find("..")) &
+		is_npos(ligne.find(",,"));
 
 	if (!bon)
 	{
@@ -207,9 +210,9 @@ bool ValidationLigne(string ligne, int nbr)
 //Retourne true is i est la constante string::npos
 bool is_npos(int i)
 {
-   if (i == string::npos)
-      return true;
-   return false;
+	if (i == string::npos)
+		return true;
+	return false;
 }
 
 /*
@@ -218,31 +221,33 @@ Retourne le int qui en résulte.
 */
 int OptimiseLongueur(string ligne)
 {
+	const int MIN_CHAR_LIGNE = 13;
+	const int MAX_CHAR_LIGNE = 17;
 	int colonnes = 0;
-   //Valeur arbitrairement grosse pour être presque certain (dans la majorité des cas d'utilisation)
-   //qu'un meilleur résultat sera trouvé.
+	//Valeur arbitrairement grosse pour être presque certain (dans la majorité des cas d'utilisation)
+	//qu'un meilleur résultat sera trouvé.
 	int meilleurTronquage = 9999;
 
-   //Vérifie selon la longueur minimale de 13 caractères par ligne jusqu'au maximum de 17 inclusivement.
-	for (int i = 13; i < 18; i++)
+	//Vérifie selon la longueur minimale de 13 caractères par ligne jusqu'au maximum de 17 inclusivement.
+	for (int i = MIN_CHAR_LIGNE; i <= MAX_CHAR_LIGNE; i++)
 	{
-      //Compteur de mots tronqués.
+		//Compteur de mots tronqués.
 		int motTronquer = 0;
-      //Le nombres de lignes. ceil est pour l'arrondir au plus grand entier supérieur.
-		int times = ceil((double)ligne.length() /i);
+		//Le nombres de lignes. ceil est pour l'arrondir au plus grand entier supérieur.
+		int times = ceil((double)ligne.length() / i);
 		for (int t = 1; t <= times; t++)
 		{
-         /*
-         Si la longueur de la ligne est plus petite ou égal que le nombre de caractère par ligne * le nombre de ligne, nous pouvons l'écrire sur une ligne au complet
-         donc pas de mot tronqué.
-         
-         */
-			if ((ligne.length() > ((t * i))) && (ligne[t*i] != ' ') && (ligne[(t*i) -1] != ' '))
+			/*
+			Si la longueur de la ligne est plus petite ou égal que le nombre de caractère par ligne * le nombre de ligne, nous pouvons l'écrire sur une ligne au complet
+			donc pas de mot tronqué.
+
+			*/
+			if ((ligne.length() > ((t * i))) && (ligne[t*i] != ' ') && (ligne[(t*i) - 1] != ' '))
 			{
 				motTronquer++;
 			}
 		}
-      //Trouvé un meilleur résultat
+		//Trouvé un meilleur résultat
 		if (motTronquer < meilleurTronquage)
 		{
 			meilleurTronquage = motTronquer;
@@ -261,16 +266,16 @@ vector<string> GrilleLettre(string ligne, int colonne)
 {
 	vector<string> grilleLettre;
 
-   //Retire des lettres de ligne au fure et à mesure pour les rajouter dans le vector grilleLettre.
+	//Retire des lettres de ligne au fure et à mesure pour les rajouter dans le vector grilleLettre.
 	while (ligne.length() != 0)
 	{
-      //Retire la première ligne de la grille et la rajoute dans le vector.
+		//Retire la première ligne de la grille et la rajoute dans le vector.
 		grilleLettre.push_back(ligne.substr(0, colonne));
-      //Lorsqu'il ne reste pas assez de caractères à la string pour former une ligne au complète (selon le int colonne)
-      //prend le restant de la string au complet. Pour éviter les erreurs d'exécution.
+		//Lorsqu'il ne reste pas assez de caractères à la string pour former une ligne au complète (selon le int colonne)
+		//prend le restant de la string au complet. Pour éviter les erreurs d'exécution.
 		ligne = ligne.substr(ligne.length() <= colonne ? ligne.length() : colonne);
 	}
-   //Rajoute des espacements vide à la dernière ligne de la grille pour avoir des string de taille uniforme.
+	//Rajoute des espacements vide à la dernière ligne de la grille pour avoir des string de taille uniforme.
 	if (grilleLettre[grilleLettre.size() - 1].length() < colonne)
 	{
 		int i = colonne - grilleLettre[grilleLettre.size() - 1].length();
@@ -278,7 +283,7 @@ vector<string> GrilleLettre(string ligne, int colonne)
 		grilleLettre[grilleLettre.size() - 1] += s;
 	}
 
-   //Mélange les caractères des colonnes
+	//Mélange les caractères des colonnes
 	for (int i = 0; i < colonne; i++)
 	{
 		int nbrEchange = rand() % 50 + 1;
@@ -286,14 +291,14 @@ vector<string> GrilleLettre(string ligne, int colonne)
 		{
 			int premier = rand() % grilleLettre.size();;
 			int deuxieme = rand() % grilleLettre.size();;
-	      //Fonction permuter disponible dans la librairie algorithm.
-			swap(grilleLettre[premier][i],grilleLettre[deuxieme][i]);
+			//Fonction permuter disponible dans la librairie algorithm.
+			swap(grilleLettre[premier][i], grilleLettre[deuxieme][i]);
 		}
 	}
-   //Utilisation des itérateurs pour transformer chaque char en majuscule.
+	//Utilisation des itérateurs pour transformer chaque char en majuscule.
 	for (int i = 0; i < grilleLettre.size(); i++)
 	{
-      transform(grilleLettre[i].begin(), grilleLettre[i].end(), grilleLettre[i].begin(), toupper);
+		transform(grilleLettre[i].begin(), grilleLettre[i].end(), grilleLettre[i].begin(), toupper);
 	}
 	return  grilleLettre;
 }
@@ -306,24 +311,24 @@ vector<string> GrilleJeu(string ligne, int colonne)
 {
 	vector<string> grilleJeu;
 
-	for (int i = 0; i < ligne.length();i++)
+	for (int i = 0; i < ligne.length(); i++)
 	{
-      //Si le caractère est alpha-numérique, on le remplace par un emplacement lettre.
+		//Si le caractère est alpha-numérique, on le remplace par un emplacement lettre.
 		if (isalnum(ligne[i]))
 		{
 			ligne[i] = '-';
 		}
-      //Sinon, devient un emplacement vide.
+		//Sinon, devient un emplacement vide.
 		else
 			ligne[i] = ' ';
 	}
 
-   //Rajoute les lignes dans la grilleJeu.
+	//Rajoute les lignes dans la grilleJeu.
 	while (ligne.length() != 0)
 	{
 		grilleJeu.push_back(ligne.substr(0, colonne));
-      //Lorsqu'il ne reste pas assez de caractères à la string pour former une ligne au complète (selon le int colonne)
-      //prend le restant de la string au complet. Pour éviter les erreurs d'exécution.
+		//Lorsqu'il ne reste pas assez de caractères à la string pour former une ligne au complète (selon le int colonne)
+		//prend le restant de la string au complet. Pour éviter les erreurs d'exécution.
 		ligne = ligne.substr(ligne.length() <= colonne ? ligne.length() : colonne);
 	}
 
@@ -340,13 +345,13 @@ Puisque QuickSort est un algorithme instable, l'ordre des lettres n'est pas gara
 */
 void PromotionEspaceVide(vector<string>& grille)
 {
-   //Pour chaque colonnes
+	//Pour chaque colonnes
 	for (int i = 0; i < grille[0].length(); i++)
 	{
-      //Lance EspaceSort, envois le data, l'index du début, l'index de la fin et le numéro de la colonne traité.
+		//Lance EspaceSort, envois le data, l'index du début, l'index de la fin et le numéro de la colonne traité.
 		EspaceSort(grille, 0, grille.size() - 1, i);
 	}
-	
+
 }
 
 
@@ -354,12 +359,12 @@ void EspaceSort(vector<string>& vecteur, int debut, int fin, int ligne)
 {
 	if (fin <= debut)
 		return;
-	
-		int indexPivot = rand() % (fin - debut) + debut;
-		indexPivot = Partition(vecteur, debut, fin, indexPivot, ligne);
-		EspaceSort(vecteur, debut, indexPivot - 1, ligne);
-		EspaceSort(vecteur, indexPivot + 1, fin, ligne);
-	
+
+	int indexPivot = rand() % (fin - debut) + debut;
+	indexPivot = Partition(vecteur, debut, fin, indexPivot, ligne);
+	EspaceSort(vecteur, debut, indexPivot - 1, ligne);
+	EspaceSort(vecteur, indexPivot + 1, fin, ligne);
+
 }
 
 
@@ -369,7 +374,7 @@ int Partition(vector<string>& vecteur, int debut, int fin, int pivot, int ligne)
 	swap(vecteur[pivot][ligne], vecteur[fin][ligne]);
 
 	int pivpost = debut;
-	for (int i = debut; i < fin;i++)
+	for (int i = debut; i < fin; i++)
 	{
 		if (vecteur[i][ligne] == ' ')
 		{
