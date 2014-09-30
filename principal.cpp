@@ -9,7 +9,6 @@ void EspaceSort(vector<string>&, int, int, int);
 int Partition(vector<string>&, int, int, int, int);
 void EcrireFichier(vector<string>, vector<string>, int);
 void AfficherJeu(vector<string>, vector<string>);
-bool is_npos(int);
 
 int main()
 {
@@ -156,6 +155,7 @@ Retourne false si incorrect. True pour valide.
 */
 bool ValidationLigne(string ligne, int nbr)
 {
+	const string SEPARATEUR = " -'.,";
 	const int LONGUEUR_MINIMAL = 35;
 	const int LONGUEUR_MAXIMAL = 100;
  	for (char c : ligne)
@@ -185,39 +185,22 @@ bool ValidationLigne(string ligne, int nbr)
 		return false;
 	}
 
-	/*
-	Utilise l'opérateur AND bit-à-bit pour déterminer si deux caractères d'espacement ce situe un à côté de l'autre.
-	La réponse est en un bit (bool). Si une des fonctions retourne un False, le résultat final sera un False.
-	Alors que pour que "bon" soit True, il faut que toutes les fonctions retourne True.
-	string.find() retourne la constante npos s'il n'y a aucun résultat dans la string, ce qui est le cas s'il n'y a pas de
-	dédoublement de caractères d'espacement. is_npos retourne True si, en effet, il n'est pas présent.
-	Permet d'avoir une condition if assez petite.
-	*/
-	bool bon = is_npos(ligne.find("  ")) &
-		is_npos(ligne.find("--")) &
-		is_npos(ligne.find("''")) &
-		is_npos(ligne.find("..")) &
-		is_npos(ligne.find(",,"));
-
-	if (!bon)
+	char precedent = ligne[0];
+	for (int i = 1; i < ligne.length(); i++)
 	{
-
-		cout << "Erreur ligne " << nbr << " séparateur de mot consécutifs dans la citation.\n";
-		system("pause");
-		return false;
+		if ((SEPARATEUR.find(precedent) != string::npos ) && (SEPARATEUR.find(ligne[i]) != string::npos))
+		{
+			cout << "Erreur ligne " << nbr << " séparateur de mot consécutifs dans la citation.\n";
+			system("pause");
+			return false;
+		}
+		precedent = ligne[i];
 	}
 
 
 	return true;
 }
 
-//Retourne true is i est la constante string::npos
-bool is_npos(int i)
-{
-	if (i == string::npos)
-		return true;
-	return false;
-}
 
 /*
 À partir d'un string, détermine le nombre de colonnes qui minimise les mots tronqués.
@@ -268,6 +251,13 @@ Retourne le résultat sour la forme d'un vector<string> ou chaque string est une
 */
 vector<string> GrilleLettre(string ligne, int colonne)
 {
+	const string SEPARATEUR = "-'.,";
+	for (int i = 0; i < ligne.length(); i++)
+	{
+		if (SEPARATEUR.find(ligne[i]) != string::npos)
+			ligne[i] = ' ';
+
+	}
 	vector<string> grilleLettre;
 
 	//Retire des lettres de ligne au fure et à mesure pour les rajouter dans le vector grilleLettre.
