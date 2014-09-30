@@ -1,10 +1,9 @@
 ﻿#include "maBiblio.h"
-#define size_type string::size_type
 
 bool ValidationLigne(string, int);
 int OptimiseLongueur(string);
-vector<string> GrilleLettre(string, size_type);
-vector<string> GrilleJeu(string, size_type);
+vector<string> GrilleLettre(string, int);
+vector<string> GrilleJeu(string, int);
 void PromotionEspaceVide(vector<string>&);
 void EspaceSort(vector<string>&, int, int, int);
 int Partition(vector<string>&, int, int, int, int);
@@ -157,8 +156,8 @@ Retourne false si incorrect. True pour valide.
 */
 bool ValidationLigne(string ligne, int nbr)
 {
-	const size_type LONGUEUR_MINIMAL = 35;
-	const size_type LONGUEUR_MAXIMAL = 100;
+	const int LONGUEUR_MINIMAL = 35;
+	const int LONGUEUR_MAXIMAL = 100;
  	for (char c : ligne)
 	{
 		//Prend le code ascii du char
@@ -167,6 +166,7 @@ bool ValidationLigne(string ligne, int nbr)
 		if (i >= 128 || i < 0)
 		{
 			cout << "Erreur ligne " << nbr << " la citation contient des caractères illegaux.\n";
+			system("pause");
 			return false;
 		}
 	}
@@ -174,12 +174,14 @@ bool ValidationLigne(string ligne, int nbr)
 	if (ligne.length() < LONGUEUR_MINIMAL)
 	{
 		cout << "Erreur ligne " << nbr << " la citation contient moins que 35 caractères.\n";
+		system("pause");
 		return false;
 	}
 
 	if (ligne.length() > LONGUEUR_MAXIMAL)
 	{
 		cout << "Erreur ligne " << nbr << " la citation contient plus que 100 caractères.\n";
+		system("pause");
 		return false;
 	}
 
@@ -201,6 +203,7 @@ bool ValidationLigne(string ligne, int nbr)
 	{
 
 		cout << "Erreur ligne " << nbr << " séparateur de mot consécutifs dans la citation.\n";
+		system("pause");
 		return false;
 	}
 
@@ -230,7 +233,7 @@ int OptimiseLongueur(string ligne)
 	int meilleurTronquage = 9999;
 
 	//Vérifie selon la longueur minimale de 13 caractères par ligne jusqu'au maximum de 17 inclusivement.
-	for (size_type i = MIN_CHAR_LIGNE; i <= MAX_CHAR_LIGNE; i++)
+	for (int i = MIN_CHAR_LIGNE; i <= MAX_CHAR_LIGNE; i++)
 	{
 		//Compteur de mots tronqués.
 		int motTronquer = 0;
@@ -263,7 +266,7 @@ int OptimiseLongueur(string ligne)
 Créer la grille de lettre à partir d'un string et du nombre de colonnes.
 Retourne le résultat sour la forme d'un vector<string> ou chaque string est une ligne différente.
 */
-vector<string> GrilleLettre(string ligne, size_type colonne)
+vector<string> GrilleLettre(string ligne, int colonne)
 {
 	vector<string> grilleLettre;
 
@@ -285,7 +288,7 @@ vector<string> GrilleLettre(string ligne, size_type colonne)
 	}
 
 	//Mélange les caractères des colonnes
-	for (size_type i = 0; i < colonne; i++)
+	for (int i = 0; i < colonne; i++)
 	{
 		int nbrEchange = rand() % 50 + 1;
 		for (int r = 0; r < nbrEchange; r++)
@@ -297,7 +300,7 @@ vector<string> GrilleLettre(string ligne, size_type colonne)
 		}
 	}
 	//Utilisation des itérateurs pour transformer chaque char en majuscule.
-	for (size_type i = 0; i < grilleLettre.size(); i++)
+	for (int i = 0; i < grilleLettre.size(); i++)
 	{
 		transform(grilleLettre[i].begin(), grilleLettre[i].end(), grilleLettre[i].begin(), toupper);
 	}
@@ -308,11 +311,11 @@ vector<string> GrilleLettre(string ligne, size_type colonne)
 Créer la grille de jeu avec des emplacements vides ou des emplacements pour écrire des lettres du nombre de colonnes données.
 Retourne un vector<string> qui est la grille formaté où chaque string est une ligne.
 */
-vector<string> GrilleJeu(string ligne, size_type colonne)
+vector<string> GrilleJeu(string ligne, int colonne)
 {
 	vector<string> grilleJeu;
 
-	for (size_type i = 0; i < ligne.length(); i++)
+	for (int i = 0; i < ligne.length(); i++)
 	{
 		//Si le caractère est alpha-numérique, on le remplace par un emplacement lettre.
 		if (isalnum(ligne[i]))
@@ -337,17 +340,11 @@ vector<string> GrilleJeu(string ligne, size_type colonne)
 	return grilleJeu;
 }
 
-/*
-Fonction pour créer un meilleur visuel.
-Utilise un QuickSort implémenté pour travailler avec les colonnes d'un vector<string> dans le but de positionner les
-emplacements vide au dessus des emplacements lettre.
-Lors du mélange des caractères sur la colonnes, les emplacements vide pouvaient ce trouver n'importe où.
-Puisque QuickSort est un algorithme instable, l'ordre des lettres n'est pas garantit.
-*/
+
 void PromotionEspaceVide(vector<string>& grille)
 {
 	//Pour chaque colonnes
-	for (size_type i = 0; i < grille[0].length(); i++)
+	for (int i = 0; i < grille[0].length(); i++)
 	{
 		//Lance EspaceSort, envois le data, l'index du début, l'index de la fin et le numéro de la colonne traité.
 		EspaceSort(grille, 0, grille.size() - 1, i);
@@ -356,22 +353,33 @@ void PromotionEspaceVide(vector<string>& grille)
 }
 
 
+
+/*
+Fonction pour créer un meilleur visuel.
+Utilise un QuickSort implémenté pour travailler avec les colonnes d'un vector<string> dans le but de positionner les
+emplacements vide au dessus des emplacements lettre.
+Lors du mélange des caractères sur la colonnes, les emplacements vide pouvaient ce trouver n'importe où.
+Puisque QuickSort est un algorithme instable, l'ordre des lettres n'est pas garanti.
+*/
 void EspaceSort(vector<string>& vecteur, int debut, int fin, int ligne)
 {
+	//Condition de sortie
 	if (fin <= debut)
 		return;
-
+	//Index de la médianne déterminé au hasard pour débuté l'algorithme.
 	int indexPivot = rand() % (fin - debut) + debut;
+	//Index du nouveau pivot, relance l'algo de la partie gauche du pivot et ensuite de la partie de droite.
 	indexPivot = Partition(vecteur, debut, fin, indexPivot, ligne);
 	EspaceSort(vecteur, debut, indexPivot - 1, ligne);
 	EspaceSort(vecteur, indexPivot + 1, fin, ligne);
 
 }
 
-
+/*
+Partitionne une ligne du vecteur et déplace tout les caractères vide à gauche du pivot. 
+*/
 int Partition(vector<string>& vecteur, int debut, int fin, int pivot, int ligne)
 {
-	char cpivot = vecteur[pivot][ligne];
 	swap(vecteur[pivot][ligne], vecteur[fin][ligne]);
 
 	int pivpost = debut;
